@@ -14,8 +14,11 @@ PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 def filter_datum(fields: typing.List[str], redaction: str,
                  message: str, separator: str) -> str:
     """Obfuscates a log message"""
-    return re.sub(r'(' + '|'.join(fields) + r')=.*?);',
-                  lambda match: f"{match.group(1)}={redaction}{separator}", message)
+    for field in fields:
+        message = re.sub(field + '=(.*?);',
+                         field + '=' + redaction + separator, message)
+
+    return message
 
 
 def get_logger() -> logging.Logger:
