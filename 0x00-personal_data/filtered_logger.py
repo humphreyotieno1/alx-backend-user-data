@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Module to define the filter_datum function and related classes"""
 
-import typing as t
+import typing
 import re
 import logging
 import mysql.connector
@@ -11,7 +11,7 @@ import os
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
-def filter_datum(fields: t.List, redaction: str,
+def filter_datum(fields: typing.List[str], redaction: str,
                  message: str, separator: str) -> str:
     """Obfuscates a log message"""
     for field in fields:
@@ -57,7 +57,7 @@ class RedactingFormatter(logging.Formatter):
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields: t.List):
+    def __init__(self, fields: typing.List):
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
 
