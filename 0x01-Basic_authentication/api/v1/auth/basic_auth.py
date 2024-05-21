@@ -19,7 +19,7 @@ class BasicAuth(Auth):
         if not authorization_header.startswith('Basic '):
             return None
         return authorization_header[len("Basic "):]
-    
+
     def decode_base64_authorization_header(self, base64_authorization_header: str) -> str:
         """used to decode value using base64"""
         b64_auth_header = base64_authorization_header
@@ -30,18 +30,18 @@ class BasicAuth(Auth):
                 return base.decode('utf-8')
             except binascii.Error:
                 return None
-            
-    def extract_user_credentials(self, decoded_base64_authorization_header: str) -> (str, str): # type: ignore
+
+    def extract_user_credentials(self, decoded_base64_authorization_header: str) -> (str, str):  # type: ignore
         """extracts user password and email"""
         if (decoded_base64_authorization_header is None
-            or not isinstance(decoded_base64_authorization_header, str)
-            or ':' not in decoded_base64_authorization_header):
+                or not isinstance(decoded_base64_authorization_header, str)
+                or ':' not in decoded_base64_authorization_header):
             return (None, None)
         user_credentials = tuple(decoded_base64_authorization_header.split(':'))
         return user_credentials
-    
+
     def user_object_from_credentials(self, user_email: str,
-                                     user_pwd: str) -> TypeVar('User'): # type: ignore
+                                     user_pwd: str) -> TypeVar('User'):  # type: ignore
         """
         Returns the User instance based on his
         email and password
@@ -63,7 +63,7 @@ class BasicAuth(Auth):
 
         return None
 
-    def current_user(self, request=None) -> TypeVar('User'): # type: ignore
+    def current_user(self, request=None) -> TypeVar('User'):  # type: ignore
         """ overloads Auth and retrieves the User instance for a request """
         auth_header = self.authorization_header(request)
 
