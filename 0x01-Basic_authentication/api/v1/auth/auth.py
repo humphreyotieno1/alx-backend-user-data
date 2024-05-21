@@ -17,7 +17,7 @@ class Auth:
             return False
         return True
 
-    def authorization_header(self, request=None) -> str:
+    def authorization_header(self, request=None) -> None:
         """returns None"""
         if request is None:
             return None
