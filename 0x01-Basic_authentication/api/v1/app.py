@@ -24,7 +24,7 @@ if getenv('AUTH_TYPE') == 'auth':
     
 
 @app.before_request
-def before_req()):
+def before_req():
     """function to before each request"""
     authorized_list = ['/api/v1/status/',
                        '/api/v1/unauthorized/', '/api/v1/forbidden/']
