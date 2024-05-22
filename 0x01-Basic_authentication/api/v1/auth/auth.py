@@ -20,7 +20,7 @@ class Auth:
     def authorization_header(self, request=None) -> None:
         """returns None"""
         key = 'Authorization'
-        
+
         if request is None or key not in request.headers:
             return
         return request.headers.get(key)
