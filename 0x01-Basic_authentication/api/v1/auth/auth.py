@@ -17,15 +17,14 @@ class Auth:
             return False
         return True
 
-    def authorization_header(self, request=None) -> str:
+    def authorization_header(self, request=None) -> None:
         """returns None"""
-        if request is None:
-            return None
-        if 'Authorization' not in request.keys():
-            return None
-        else:
-            return request['Authorization']
+        key = 'Authorization'
+        
+        if request is None or key not in request.headers:
+            return
+        return request.headers.get(key)
 
-    def current_user(self, request=None) -> TypeVar('User'):  # type: ignore
+    def current_user(self, request=None) -> None:
         """returns None"""
-        return None
+        return
