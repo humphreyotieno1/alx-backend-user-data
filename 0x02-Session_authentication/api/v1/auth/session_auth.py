@@ -3,10 +3,9 @@
 from api.v1.auth.auth import Auth
 import uuid
 from models.user import User
-from flask import Flask, jsonify, request
-from api.v1.views import app_views
+from flask import Blueprint, request, jsonify, abort
 from models.user import User
-from api.v1.app import auth
+import os
 
 
 class SessionAuth(Auth):
@@ -37,9 +36,12 @@ class SessionAuth(Auth):
             return None
         return User.get(user_id)
 
+    app_views = Blueprint('app_views', __name__, url_prefix='/api/v1')
+
     @app_views.route('/auth_session/login',
                      methods=['POST'], strict_slashes=False)
-    def session_login():
+    def auth_session_login():
+        """Handles session authentication login"""
         email = request.form.get('email')
         password = request.form.get('password')
 
@@ -48,16 +50,19 @@ class SessionAuth(Auth):
         if not password:
             return jsonify({"error": "password missing"}), 400
 
-        user = User.search({'email': email})
-        if not user:
+        users = User.search({'email': email})
+        if not users:
             return jsonify({"error": "no user found for this email"}), 404
 
-        if not user[0].is_valid_password(password):
+        user = users[0]
+        if not user.is_valid_password(password):
             return jsonify({"error": "wrong password"}), 401
 
-        session_id = auth.create_session(user[0].id)
-        user_dict = user[0].to_json()
-        response = jsonify(user_dict)
-        response.set_cookie(auth.session_name, session_id)
+        from api.v1.app import auth
+
+        session_id = auth.create_session(user.id)
+        response = jsonify(user.to_json())
+        session_name = os.getenv('SESSION_NAME', '_my_session_id')
+        response.set_cookie(session_name, session_id)
 
         return response
