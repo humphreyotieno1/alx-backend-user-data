@@ -34,7 +34,7 @@ class Auth:
 
     def current_user(self, request=None) -> None:
         """returns None"""
-        return None
+        return
 
     def session_cookie(self, request=None):
         """get cookie"""
