@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+'''Module to test user case'''
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
 
@@ -7,6 +8,7 @@ Base = declarative_base()
 
 
 class User(Base):
+    '''User model'''
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
@@ -16,5 +18,7 @@ class User(Base):
     reset_token = Column(String(250), nullable=True)
 
     def __repr__(self):
-        return "<User(name='%s', fullname='%s', password='%s')>" % (
-                                self.name, self.fullname, self.password)
+        return "<User(id='%s', email='%s', hashed_password='%s', " \
+               "session_id='%s', reset_token='%s')>" % (
+                    self.id, self.email, self.hashed_password,
+                    self.session_id, self.reset_token)
