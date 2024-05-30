@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
-
+from typing import Dict
 from user import Base, User
 
 
@@ -40,10 +40,20 @@ class DB:
         session.commit()
         return user
 
-    def find_user_by(self, **kwargs):
+    def find_user_by(self, **kwarg: Dict) -> User:
+        """Finds user in a table with specified attributes"""
+        for attr, name_to_search in kwarg.items():
+            if attr not in self.attributes:
+                raise InvalidRequestError("Invalid attribute provided.")
+
         try:
-            return self.session.query(User).filter_by(**kwargs).one()
-        except NoResultFound:
-            raise NoResultFound(f"No user found with the given parameters: {kwargs}")
-        except InvalidRequestError:
-            raise InvalidRequestError(f"Invalid query parameters: {kwargs}")
+            query = self._session.query(User)
+            for attr, name_to_search in kwarg.items():
+                query = query.filter(getattr(User, attr) == name_to_search)
+            user = query.first()
+            if user is None:
+                raise NoResultFound("User not found.")
+        except NoResultFound as e:
+            raise NoResultFound("User not found.") from e
+
+        return user
