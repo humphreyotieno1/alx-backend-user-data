@@ -40,12 +40,10 @@ class DB:
         session.commit()
         return user
 
-    def find_user_by(self, **kwargs) -> User:
-        """Find user by email"""
-        session = self._session
+    def find_user_by(self, **kwargs):
         try:
-            return session.query(User).filter_by(**kwargs).one()
+            return self.session.query(User).filter_by(**kwargs).one()
         except NoResultFound:
-            raise
+            raise NoResultFound(f"No user found with the given parameters: {kwargs}")
         except InvalidRequestError:
-            raise
+            raise InvalidRequestError(f"Invalid query parameters: {kwargs}")
