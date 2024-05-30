@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """DB module
 """
+from typing import Dict
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -40,12 +42,13 @@ class DB:
         session.commit()
         return user
 
-    def find_user_by(self, **kwargs) -> User:
+    def find_user_by(self, **kwargs: Dict[str, str]) -> User:
         """Find user by email"""
         session = self._session
         try:
-            return session.query(User).filter_by(**kwargs).one()
+            user = session.query(User).filter_by(**kwargs).one()
         except NoResultFound:
-            raise
+            raise NoResultFound()
         except InvalidRequestError:
-            raise
+            raise InvalidRequestError()
+        return user
